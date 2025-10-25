@@ -1,0 +1,98 @@
+# ---------------------------
+# Global ignores
+# ---------------------------
+.DS_Store
+*.log
+*.env
+*.env.*
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+*.sqlite3
+*.db
+*.bak
+*.swp
+*.tmp
+*.temp
+*.idea/
+*.vscode/
+.env
+.env.*
+Thumbs.db
+
+# ---------------------------
+# Python / Flask backend
+# ---------------------------
+/backend/instance/
+*/__pycache__/
+/backend/migrations/
+/backend/.venv/
+/backend/*.json
+/backend/venv/
+/backend/env/
+/backend/.env
+/backend/.flaskenv
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Distribution / packaging
+/build/
+develop-eggs/
+dist/
+downloads/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# ---------------------------
+# React frontend
+# ---------------------------
+/frontend/node_modules/
+/frontend/.pnp
+/frontend/.pnp.js
+/frontend/coverage/
+/frontend/build/
+
+# React env files
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# Debug logs
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/package-lock.json
+/frontend/yarn.lock
+
+# ---------------------------
+# OS / IDE specific
+# ---------------------------
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace

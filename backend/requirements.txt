@@ -1,0 +1,18 @@
+flask
+flask-cors
+boto3
+torch
+torchvision
+transformers
+pytesseract
+opencv-python
+Pillow
+# python-dotenv
+numpy
+pandas
+scikit-learn
+sentence-transformers
+SQLAlchemy
+psycopg2-binary
+requests
+sendgrid
