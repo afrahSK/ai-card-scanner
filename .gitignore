@@ -23,7 +23,7 @@ __pycache__/
 .env
 .env.*
 Thumbs.db
-
+backend.zip
 # ---------------------------
 # Python / Flask backend
 # ---------------------------

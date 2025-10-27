@@ -54,6 +54,7 @@ const Home = () => {
   const [messageType, setMessageType] = useState('personalized');
   const [messageContent, setMessageContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [senderEmail, setSenderEmail] = useState('');
 
   const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
@@ -110,29 +111,43 @@ const Home = () => {
   // const communicationChannel = "Email";
 
   const handleSendMessage = async () => {
-    console.log(`Sending message via ${communicationChannel}:`);
     setStatus("Sending...");
+    // receiver: extractedData.email (dynamic)
+    const receiverEmail = extractedData?.email;
+    const name = extractedData?.name || "there";
+
+    if (!receiverEmail) {
+      setStatus("No recipient email found in extracted data.");
+      return;
+    }
+    if (!senderEmail) {
+      // allow sending with no sender typed (optional)
+      setStatus("Please enter your email first (will be used as Reply-To).");
+      return;
+    }
 
     try {
       const response = await fetch("http://127.0.0.1:5000/send-email", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}), // static email for now
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender_email: senderEmail,
+          receiver_email: receiverEmail,
+          name: name
+        }),
       });
 
       const data = await response.json();
-
       if (response.ok) {
-        setStatus(`Email sent successfully! Status code: ${data.code}`);
+        setStatus(`Email sent successfully! (${data.code})`);
       } else {
-        setStatus(`Error: ${data.error}`);
+        setStatus(`Error: ${data.error || 'Unknown error'}`);
       }
     } catch (err) {
-      setStatus(`Error: ${err.message}`);
+      setStatus(`Fetch error: ${err.message}`);
     }
   };
+
 
 
 
@@ -228,6 +243,18 @@ const Home = () => {
                 <ExtractedField icon={WorkIcon} label="Phone" value={extractedData.phone || 'N/A'} />
                 <ExtractedField icon={LocalPhoneIcon} label="Company" value={extractedData.company || 'N/A'} />
               </div>
+            </div>
+            {/* Sender email input (user types their email) */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your email (will be set as reply-to)</label>
+              <input
+                type="email"
+                value={senderEmail}
+                onChange={(e) => setSenderEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full p-2 border rounded"
+              />
+              <p className="text-xs text-gray-500 mt-1">For now we will send from the app's verified sender and set this as Reply-To.</p>
             </div>
 
             <div className={cardBaseClasses}>

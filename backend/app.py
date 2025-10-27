@@ -177,7 +177,7 @@ def upload_card():
 # the msg sending logic to etracted email
 # Use your SendGrid API key and verified Gmail
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")  # or directly paste for quick test
-FROM_EMAIL = "karatelaafrah0@gmail.com"
+FROM_EMAIL = os.getenv("FROM_EMAIL")
 
 # Simple template-based message
 def generate_message(contact_name):
@@ -193,34 +193,32 @@ def generate_message(contact_name):
 
 @app.route("/send-email", methods=["POST"])
 def send_email():
-    print("reached send mail route")
-    # Static test recipient for now
-    contact_name = "Test user"
-    contact_email = "haadi.karatela@gmail.com"  # <-- put your test email here
+    data = request.get_json() or {}
+    user_sender = data.get("sender_email")
+    receiver_email = data.get("receiver_email")
+    contact_name = data.get("name", "there")
+
+    if not receiver_email:
+        return jsonify({"status":"error","error":"Missing receiver_email"}), 400
 
     message = Mail(
         from_email=FROM_EMAIL,
-        to_emails=contact_email,
-        subject="Test Email from Business Card Scanner",
+        to_emails=receiver_email,
+        subject=f"Hi {contact_name} — quick note from Card-to-Connect",
         plain_text_content=generate_message(contact_name)
     )
 
+    if user_sender:
+        message.reply_to = user_sender
+
     try:
-        # ✅ Force SendGrid to use certifi’s trusted certificates
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         sg.client.session.verify = certifi.where()
-
-        # ✅ Extra SSL patch (for Windows OpenSSL issues)
-        ssl_context = ssl.create_default_context(cafile=certifi.where())
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        sg.client.request = lambda *args, **kwargs: sg.client.session.request(*args, verify=certifi.where(), **kwargs)
-
         response = sg.send(message)
-        print("✅ Email sent successfully:", response.status_code)
-        return jsonify({"status": "success", "code": response.status_code})
+        return jsonify({"status":"success","code": response.status_code})
     except Exception as e:
-        print("❌ Email sending error:", e)
-        return jsonify({"status": "error", "error": str(e)}), 500
+        print("Email sending error:", e)
+        return jsonify({"status":"error","error": str(e)}), 500
 
 # -------------------------
 # Run server
