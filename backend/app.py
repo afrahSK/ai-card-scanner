@@ -193,6 +193,7 @@ def generate_message(contact_name):
 
 @app.route("/send-email", methods=["POST"])
 def send_email():
+    print("in send function")
     data = request.get_json() or {}
     user_sender = data.get("sender_email")
     receiver_email = data.get("receiver_email")

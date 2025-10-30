@@ -1,18 +1,10 @@
-flask
+Flask
 flask-cors
-boto3
-torch
-torchvision
-transformers
+google-cloud-storage
+python-dotenv
 pytesseract
-opencv-python
 Pillow
-# python-dotenv
-numpy
-pandas
-scikit-learn
-sentence-transformers
-SQLAlchemy
-psycopg2-binary
-requests
+opencv-python-headless
 sendgrid
+gunicorn
+certifi
