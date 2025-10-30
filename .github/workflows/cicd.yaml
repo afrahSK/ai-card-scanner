@@ -3,14 +3,13 @@ name: Deploy to Cloud Run
 on:
   push:
     branches:
-      - main  # or whichever branch you want to trigger deployment
+      - main
 
 env:
   PROJECT_ID: businesscard-474411
-  REGION: asia-south1   # change if different
+  REGION: asia-south1
   SERVICE_NAME: fullstack
   REPO_NAME: ai-card-scanner
-  IMAGE: asia-south1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}
 
 jobs:
   deploy:
@@ -22,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup gcloud CLI
+      # 2️⃣ Set up gcloud CLI
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -30,14 +29,16 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      # 3️⃣ Build and push the Docker image
+      # 3️⃣ Build and Push Docker image
       - name: Build and Push Docker image
         run: |
+          IMAGE="asia-south1-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${SERVICE_NAME}"
           gcloud builds submit --tag $IMAGE ./backend
 
       # 4️⃣ Deploy to Cloud Run
       - name: Deploy to Cloud Run
         run: |
+          IMAGE="asia-south1-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${SERVICE_NAME}"
           gcloud run deploy $SERVICE_NAME \
             --image $IMAGE \
             --region $REGION \
